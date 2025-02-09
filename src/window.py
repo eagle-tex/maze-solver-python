@@ -47,10 +47,6 @@ def main():
     house_color = "blue"
     door_color = "red"
     line1 = Line(pointA, pointB)
-    # print(
-    #     f"Drawing line from ({line1.start.x}, {line1.start.y}) to ({line1.end.x}, {line1.end.y})"
-    # )
-    # print("line 1 about to be drawn")
     line2 = Line(pointB, pointC)
     line3 = Line(pointC, pointE)
     line4 = Line(pointE, pointD)
