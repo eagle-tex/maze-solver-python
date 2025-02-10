@@ -1,4 +1,5 @@
 from cell import Cell
+from maze import Maze
 from window import Window
 
 
@@ -6,16 +7,10 @@ def main():
     win = Window(800, 600)
     print(f"Window size: {win.width} x {win.height}")
 
-    # Create a few cells and draw them
-    cell1 = Cell(50, 50, 100, 100, win, True, False, True, True)
-    cell2 = Cell(100, 50, 150, 100, win, False, True, True, False)
-    cell3 = Cell(100, 100, 150, 150, win, True, True, False, False)
-    cell1.draw(50, 50, 100, 100, "black")
-    cell2.draw(100, 50, 150, 100, "blue")
-    cell3.draw(100, 100, 150, 150, "red")
-
-    cell1.draw_move(cell2, False)
-    cell2.draw_move(cell3, True)
+    maze = Maze(200, 100, 8, 8, 50, 50, win)
+    # maze = Maze(150, 50, 10, 10, 50, 50, win)
+    # maze = Maze(100, 0, 6, 6, 100, 100, win)
+    maze._create_cells()
 
     win.wait_for_close()
 
