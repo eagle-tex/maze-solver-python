@@ -14,6 +14,9 @@ def main():
     cell2.draw(100, 50, 150, 100, "blue")
     cell3.draw(100, 100, 150, 150, "red")
 
+    cell1.draw_move(cell2, False)
+    cell2.draw_move(cell3, True)
+
     win.wait_for_close()
 
 
