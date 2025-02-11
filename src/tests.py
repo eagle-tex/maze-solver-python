@@ -47,6 +47,27 @@ class Tests(unittest.TestCase):
             cell_size_y,
         )
 
+    def test_check_top_left_wall_and_bottom_right_wall(self):
+        num_rows = 6
+        num_cols = 8
+        m1 = Maze(50, 50, num_rows, num_cols, 25, 25)
+        top_left_cell = m1._cells[0][0]
+        bottom_right_cell = m1._cells[num_rows - 1][num_cols - 1]
+
+        self.assertEqual(top_left_cell.has_top_wall, True)
+        self.assertEqual(bottom_right_cell.has_bottom_wall, True)
+
+    def test_break_entrance_and_exit(self):
+        num_rows = 6
+        num_cols = 8
+        m1 = Maze(50, 50, num_rows, num_cols, 25, 25)
+        m1._break_entrance_and_exit()
+        top_left_cell = m1._cells[0][0]
+        bottom_right_cell = m1._cells[num_rows - 1][num_cols - 1]
+
+        self.assertEqual(top_left_cell.has_top_wall, False)
+        self.assertEqual(bottom_right_cell.has_bottom_wall, False)
+
 
 if __name__ == "__main__":
     unittest.main()
