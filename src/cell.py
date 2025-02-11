@@ -2,6 +2,8 @@ from line import Line
 from point import Point
 from window import Window
 
+BACKGROUND_COLOR: str = "#d9d9d9"
+
 
 class Cell:
     def __init__(
@@ -51,25 +53,26 @@ class Cell:
         top_right_corner: Point = Point(bottom_right_x, top_left_y)
         bottom_right_corner: Point = Point(bottom_right_x, bottom_right_y)
 
-        if self.has_left_wall:
-            if self._window:
-                left_wall: Line = Line(top_left_corner, bottom_left_corner)
+        if self._window:
+            left_wall: Line = Line(top_left_corner, bottom_left_corner)
+            if self.has_left_wall:
                 self._window.draw_line(left_wall, fill_color)
 
-        if self.has_top_wall:
-            if self._window:
-                top_wall: Line = Line(top_left_corner, top_right_corner)
+            top_wall: Line = Line(top_left_corner, top_right_corner)
+            if self.has_top_wall:
                 self._window.draw_line(top_wall, fill_color)
+            else:
+                self._window.draw_line(top_wall, BACKGROUND_COLOR)
 
-        if self.has_right_wall:
-            if self._window:
-                right_wall: Line = Line(top_right_corner, bottom_right_corner)
+            right_wall: Line = Line(top_right_corner, bottom_right_corner)
+            if self.has_right_wall:
                 self._window.draw_line(right_wall, fill_color)
 
-        if self.has_bottom_wall:
-            if self._window:
-                bottom_wall: Line = Line(bottom_left_corner, bottom_right_corner)
+            bottom_wall: Line = Line(bottom_left_corner, bottom_right_corner)
+            if self.has_bottom_wall:
                 self._window.draw_line(bottom_wall, fill_color)
+            else:
+                self._window.draw_line(bottom_wall, BACKGROUND_COLOR)
 
     def draw_move(self, to_cell: "Cell", undo: bool = False):
         if self._window:

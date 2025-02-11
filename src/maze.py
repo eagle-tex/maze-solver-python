@@ -70,3 +70,11 @@ class Maze:
         if self.window:
             self.window.redraw()
             time.sleep(0.05)
+
+    def _break_entrance_and_exit(self):
+        top_left_cell = self._cells[0][0]
+        bottom_right_cell = self._cells[self.num_rows - 1][self.num_cols - 1]
+        top_left_cell.has_top_wall = False
+        self._draw_cell(0, 0)
+        bottom_right_cell.has_bottom_wall = False
+        self._draw_cell(self.num_rows - 1, self.num_cols - 1)
