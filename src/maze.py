@@ -12,7 +12,7 @@ class Maze:
         num_cols: int,
         cell_size_x: int,
         cell_size_y: int,
-        window: Window,
+        window: Window | None = None,
     ) -> None:
         self.x1 = x1
         self.y1 = y1
@@ -67,5 +67,6 @@ class Maze:
         self._animate()
 
     def _animate(self):
-        self.window.redraw()
-        time.sleep(0.05)
+        if self.window:
+            self.window.redraw()
+            time.sleep(0.05)

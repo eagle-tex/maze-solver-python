@@ -10,7 +10,7 @@ class Cell:
         y1,
         x2,
         y2,
-        window: Window,
+        window: Window | None = None,
         has_left_wall: bool = True,
         has_right_wall: bool = True,
         has_top_wall: bool = True,
@@ -20,7 +20,7 @@ class Cell:
         self._y1 = y1
         self._x2 = x2
         self._y2 = y2
-        self._window: Window = window
+        self._window = window
         self.has_left_wall = has_left_wall
         self.has_right_wall = has_right_wall
         self.has_top_wall = has_top_wall
@@ -52,28 +52,33 @@ class Cell:
         bottom_right_corner: Point = Point(bottom_right_x, bottom_right_y)
 
         if self.has_left_wall:
-            left_wall: Line = Line(top_left_corner, bottom_left_corner)
-            self._window.draw_line(left_wall, fill_color)
+            if self._window:
+                left_wall: Line = Line(top_left_corner, bottom_left_corner)
+                self._window.draw_line(left_wall, fill_color)
 
         if self.has_top_wall:
-            top_wall: Line = Line(top_left_corner, top_right_corner)
-            self._window.draw_line(top_wall, fill_color)
+            if self._window:
+                top_wall: Line = Line(top_left_corner, top_right_corner)
+                self._window.draw_line(top_wall, fill_color)
 
         if self.has_right_wall:
-            right_wall: Line = Line(top_right_corner, bottom_right_corner)
-            self._window.draw_line(right_wall, fill_color)
+            if self._window:
+                right_wall: Line = Line(top_right_corner, bottom_right_corner)
+                self._window.draw_line(right_wall, fill_color)
 
         if self.has_bottom_wall:
-            bottom_wall: Line = Line(bottom_left_corner, bottom_right_corner)
-            self._window.draw_line(bottom_wall, fill_color)
+            if self._window:
+                bottom_wall: Line = Line(bottom_left_corner, bottom_right_corner)
+                self._window.draw_line(bottom_wall, fill_color)
 
     def draw_move(self, to_cell: "Cell", undo: bool = False):
-        from_cell_center: Point = Point(
-            (self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2
-        )
-        to_cell_center: Point = Point(
-            (to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2
-        )
-        line_color: str = "red" if not undo else "gray"
-        line: Line = Line(from_cell_center, to_cell_center)
-        self._window.draw_line(line, line_color)
+        if self._window:
+            from_cell_center: Point = Point(
+                (self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2
+            )
+            to_cell_center: Point = Point(
+                (to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2
+            )
+            line_color: str = "red" if not undo else "gray"
+            line: Line = Line(from_cell_center, to_cell_center)
+            self._window.draw_line(line, line_color)

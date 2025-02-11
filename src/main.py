@@ -1,4 +1,3 @@
-from cell import Cell
 from maze import Maze
 from window import Window
 
