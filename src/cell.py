@@ -27,6 +27,7 @@ class Cell:
         self.has_right_wall = has_right_wall
         self.has_top_wall = has_top_wall
         self.has_bottom_wall = has_bottom_wall
+        self.visited: bool = False
 
     def get_top_left_corner(self) -> Point:  # Tuple[Point,Point]:
         return Point(self._x1, self._y1)

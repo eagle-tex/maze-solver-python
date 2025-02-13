@@ -1,6 +1,9 @@
+import random
 from cell import Cell
 from window import Window
 import time
+
+DEFAULT_SEED = 0
 
 
 class Maze:
@@ -13,6 +16,7 @@ class Maze:
         cell_size_x: int,
         cell_size_y: int,
         window: Window | None = None,
+        seed: int | None = None,
     ) -> None:
         self.x1 = x1
         self.y1 = y1
@@ -22,6 +26,7 @@ class Maze:
         self.cell_size_y = cell_size_y
         self.window = window
         self._cells: list[list[Cell]] = []
+        self.seed = random.seed(seed) if seed else DEFAULT_SEED
         self._create_cells()
 
     def _create_cells(self) -> None:
@@ -78,3 +83,62 @@ class Maze:
         self._draw_cell(0, 0)
         bottom_right_cell.has_bottom_wall = False
         self._draw_cell(self.num_rows - 1, self.num_cols - 1)
+
+    def _break_walls_r(self, i, j) -> None:
+        current_cell: Cell = self._cells[i][j]
+        current_cell.visited = True
+        while True:
+            to_visit: list[tuple[int, int]] = []
+            possible_directions: list[tuple[int, int]] = []
+            possible_rows = []
+            possible_cols = []
+            if i == 0:
+                possible_rows.append(1)
+            elif i == self.num_rows - 1:
+                possible_rows.append(i - 1)
+            else:
+                possible_rows.append(i - 1)
+                possible_rows.append(i + 1)
+
+            if j == 0:
+                possible_cols.append(1)
+            elif j == self.num_cols - 1:
+                possible_cols.append(j - 1)
+            else:
+                possible_cols.append(j - 1)
+                possible_cols.append(j + 1)
+
+            for i_val in possible_rows:
+                if not self._cells[i_val][j].visited:
+                    possible_directions.append((i_val, j))
+            for j_val in possible_cols:
+                if not self._cells[i][j_val].visited:
+                    possible_directions.append((i, j_val))
+
+            num_possible_dir = len(possible_directions)
+            if num_possible_dir == 0:
+                self._draw_cell(i, j)
+                return
+
+            direction = possible_directions[random.randrange(num_possible_dir)]
+            next_cell_row: int = direction[0]
+            next_cell_col: int = direction[1]
+            next_cell = self._cells[next_cell_row][next_cell_col]
+            # next_cell_col=direction[1]
+            if i == next_cell_row:
+                if j < next_cell_col:
+                    current_cell.has_right_wall = False
+                    next_cell.has_left_wall = False
+                elif j > next_cell_col:
+                    current_cell.has_left_wall = False
+                    next_cell.has_right_wall = False
+                else:
+                    raise Exception("can't have the same column number")
+            elif i < next_cell_row:
+                current_cell.has_bottom_wall = False
+                next_cell.has_top_wall = False
+            else:
+                current_cell.has_top_wall = False
+                next_cell.has_bottom_wall = False
+
+            self._break_walls_r(next_cell_row, next_cell_col)
