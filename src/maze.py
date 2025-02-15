@@ -131,3 +131,8 @@ class Maze:
 
             # current_cell.draw_move(next_cell) # draw moves between cells
             self._break_walls_r(next_cell_row, next_cell_col)
+
+    def _reset_cells_visited(self) -> None:
+        for i in range(self.num_rows):
+            for j in range(self.num_cols):
+                self._cells[i][j].visited = False
