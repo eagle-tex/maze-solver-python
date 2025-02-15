@@ -58,6 +58,8 @@ class Cell:
             left_wall: Line = Line(top_left_corner, bottom_left_corner)
             if self.has_left_wall:
                 self._window.draw_line(left_wall, fill_color)
+            else:
+                self._window.draw_line(left_wall, BACKGROUND_COLOR)
 
             top_wall: Line = Line(top_left_corner, top_right_corner)
             if self.has_top_wall:
@@ -68,6 +70,8 @@ class Cell:
             right_wall: Line = Line(top_right_corner, bottom_right_corner)
             if self.has_right_wall:
                 self._window.draw_line(right_wall, fill_color)
+            else:
+                self._window.draw_line(right_wall, BACKGROUND_COLOR)
 
             bottom_wall: Line = Line(bottom_left_corner, bottom_right_corner)
             if self.has_bottom_wall:
