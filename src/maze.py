@@ -130,7 +130,6 @@ class Maze:
                 self._cells[i][j].has_left_wall = False
                 self._cells[next_cell_row][next_cell_col].has_right_wall = False
 
-            # current_cell.draw_move(next_cell) # draw moves between cells
             self._break_walls_r(next_cell_row, next_cell_col)
 
     def _reset_cells_visited(self) -> None:
@@ -138,20 +137,22 @@ class Maze:
             for j in range(self.num_cols):
                 self._cells[i][j].visited = False
 
-    def solve(self) -> bool:
-        return self._solve_r(0, 0)
-
     def _solve_r(self, i: int, j: int) -> bool:
         self._animate(0.1)
+
+        # visit the current cell
         self._cells[i][j].visited = True
 
+        # if we are at the end cell, we are done!
         if i == self.num_rows and j == self.num_cols:
             return True
 
+        # for each direction
         is_valid_move = False
         for di, dj in DIRECTIONS:
             ni, nj = i + di, j + dj
 
+            # if the next cell is valid and is unvisited
             if (
                 0 <= ni < self.num_rows
                 and 0 <= nj < self.num_cols
@@ -160,6 +161,7 @@ class Maze:
                 current_cell = self._cells[i][j]
                 next_cell = self._cells[ni][nj]
 
+                # if there is no wall preventing moving down
                 if i < self.num_rows - 1 and i + 1 == ni:  # moving down
                     if not current_cell.has_bottom_wall and not next_cell.has_top_wall:
                         current_cell.draw_move(next_cell)
@@ -169,6 +171,7 @@ class Maze:
                         else:
                             current_cell.draw_move(next_cell, True)
 
+                # if there is no wall preventing moving up
                 if i > 0 and i - 1 == ni:  # moving up
                     if not current_cell.has_top_wall and not next_cell.has_bottom_wall:
                         current_cell.draw_move(next_cell)
@@ -178,6 +181,7 @@ class Maze:
                         else:
                             current_cell.draw_move(next_cell, True)
 
+                # if there is no wall preventing moving right
                 if j < self.num_cols - 1 and j + 1 == nj:  # moving right
                     if not current_cell.has_right_wall and not next_cell.has_left_wall:
                         current_cell.draw_move(next_cell)
@@ -187,6 +191,7 @@ class Maze:
                         else:
                             current_cell.draw_move(next_cell, True)
 
+                # if there is no wall preventing moving left
                 if j > 0 and j - 1 == nj:  # moving left
                     if not current_cell.has_left_wall and not next_cell.has_right_wall:
                         current_cell.draw_move(next_cell)
@@ -196,9 +201,9 @@ class Maze:
                         else:
                             current_cell.draw_move(next_cell, True)
 
-                # if is_valid_move:
-                #     return True
-                # else:
-                #     current_cell.draw_move(next_cell, True)
-
+        # we went the wrong way, let the previous cell know by returning False
         return False
+
+    # create the moves for the solution using a depth-first search
+    def solve(self) -> bool:
+        return self._solve_r(0, 0)

@@ -31,7 +31,6 @@ def main():
         win,
         random.randrange(50),
     )
-    # maze._break_walls_r(0, 0)
 
     # Solve the maze
     maze.solve()
