@@ -90,3 +90,37 @@ class Cell:
             line_color: str = "red" if not undo else "gray"
             line: Line = Line(from_cell_center, to_cell_center)
             self._window.draw_line(line, line_color)
+
+    # def is_adjacent_to(self, other: "Cell") -> bool:
+    #     top_left_corner1 = self.get_top_left_corner()
+    #     top_right_corner1 = self.get_top_right_corner()
+    #     bottom_left_corner1 = self.get_bottom_left_corner()
+    #     bottom_right_corner1 = self.get_bottom_right_corner()
+    #     corners_list1 = [
+    #         top_left_corner1,
+    #         top_right_corner1,
+    #         bottom_left_corner1,
+    #         bottom_right_corner1,
+    #     ]
+    #
+    #     top_left_corner2 = other.get_top_left_corner()
+    #     top_right_corner2 = other.get_top_right_corner()
+    #     bottom_left_corner2 = other.get_bottom_left_corner()
+    #     bottom_right_corner2 = other.get_bottom_right_corner()
+    #     corners_list2 = [
+    #         top_left_corner2,
+    #         top_right_corner2,
+    #         bottom_left_corner2,
+    #         bottom_right_corner2,
+    #     ]
+    #
+    #     nb_shared_corners: int = 0
+    #     for corner in corners_list1:
+    #         for other_corner in corners_list2:
+    #             if corner == other_corner:
+    #                 nb_shared_corners += 1
+    #
+    #     if nb_shared_corners == 2:
+    #         return True
+    #
+    #     return False
