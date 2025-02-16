@@ -144,7 +144,7 @@ class Maze:
         self._cells[i][j].visited = True
 
         # if we are at the end cell, we are done!
-        if i == self.num_rows and j == self.num_cols:
+        if i == self.num_rows - 1 and j == self.num_cols - 1:
             return True
 
         # for each direction
