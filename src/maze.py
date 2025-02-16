@@ -6,7 +6,12 @@ import time
 DEFAULT_SEED = 0
 SLEEP_TIME = 0.05  # 0.05
 
-DIRECTIONS = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Up, Down, Left, Right
+DIRECTIONS_WITH_WALLS = [
+    (-1, 0, "UP"),
+    (1, 0, "DOWN"),
+    (0, -1, "LEFT"),
+    (0, 1, "RIGHT"),
+]  # Up, Down, Left, Right
 
 
 class Maze:
@@ -98,7 +103,7 @@ class Maze:
             possible_directions: list[tuple[int, int]] = []
 
             # Only add unvisited neighbors
-            for di, dj in DIRECTIONS:
+            for di, dj, _ in DIRECTIONS_WITH_WALLS:
                 ni, nj = i + di, j + dj  # ni, nj represent the neighbor cell
                 # Check if the neighbor is within bounds and unvisited
                 if 0 <= ni < self.num_rows and 0 <= nj < self.num_cols:
@@ -137,6 +142,41 @@ class Maze:
             for j in range(self.num_cols):
                 self._cells[i][j].visited = False
 
+    def is_valid_move(
+        self, i: int, j: int, ni: int, nj: int, wall_between: str
+    ) -> bool:
+        if not (0 <= ni < self.num_rows and 0 <= nj < self.num_cols):
+            return False  # Destination is out of bounds
+
+        current_cell = self._cells[i][j]
+        next_cell = self._cells[ni][nj]
+
+        if next_cell.visited:
+            return False  # already visited
+
+        # Check if the wall between the cells permits movement
+        if wall_between == "UP" and (
+            current_cell.has_top_wall or next_cell.has_bottom_wall
+        ):
+            return False
+        if wall_between == "DOWN" and (
+            current_cell.has_bottom_wall or next_cell.has_top_wall
+        ):
+            return False
+        if wall_between == "LEFT" and (
+            current_cell.has_left_wall or next_cell.has_right_wall
+        ):
+            return False
+        if wall_between == "RIGHT" and (
+            current_cell.has_right_wall or next_cell.has_left_wall
+        ):
+            return False
+
+        return True
+
+    def undo_move(self, current_cell: Cell, next_cell: Cell):
+        current_cell.draw_move(next_cell, True)
+
     def _solve_r(self, i: int, j: int) -> bool:
         self._animate(0.1)
 
@@ -148,58 +188,23 @@ class Maze:
             return True
 
         # for each direction
-        is_valid_move = False
-        for di, dj in DIRECTIONS:
+        for di, dj, wall_between in DIRECTIONS_WITH_WALLS:
             ni, nj = i + di, j + dj
 
             # if the next cell is valid and is unvisited
-            if (
-                0 <= ni < self.num_rows
-                and 0 <= nj < self.num_cols
-                and not self._cells[ni][nj].visited
-            ):
+            if self.is_valid_move(i, j, ni, nj, wall_between):
                 current_cell = self._cells[i][j]
                 next_cell = self._cells[ni][nj]
 
-                # if there is no wall preventing moving down
-                if i < self.num_rows - 1 and i + 1 == ni:  # moving down
-                    if not current_cell.has_bottom_wall and not next_cell.has_top_wall:
-                        current_cell.draw_move(next_cell)
-                        is_valid_move = self._solve_r(ni, nj)
-                        if is_valid_move:
-                            return True
-                        else:
-                            current_cell.draw_move(next_cell, True)
+                # Draw the move
+                current_cell.draw_move(next_cell)
 
-                # if there is no wall preventing moving up
-                if i > 0 and i - 1 == ni:  # moving up
-                    if not current_cell.has_top_wall and not next_cell.has_bottom_wall:
-                        current_cell.draw_move(next_cell)
-                        is_valid_move = self._solve_r(ni, nj)
-                        if is_valid_move:
-                            return True
-                        else:
-                            current_cell.draw_move(next_cell, True)
+                # Recurse into the next cell
+                if self._solve_r(ni, nj):
+                    return True
 
-                # if there is no wall preventing moving right
-                if j < self.num_cols - 1 and j + 1 == nj:  # moving right
-                    if not current_cell.has_right_wall and not next_cell.has_left_wall:
-                        current_cell.draw_move(next_cell)
-                        is_valid_move = self._solve_r(ni, nj)
-                        if is_valid_move:
-                            return True
-                        else:
-                            current_cell.draw_move(next_cell, True)
-
-                # if there is no wall preventing moving left
-                if j > 0 and j - 1 == nj:  # moving left
-                    if not current_cell.has_left_wall and not next_cell.has_right_wall:
-                        current_cell.draw_move(next_cell)
-                        is_valid_move = self._solve_r(ni, nj)
-                        if is_valid_move:
-                            return True
-                        else:
-                            current_cell.draw_move(next_cell, True)
+                # Undo the move if it leads to a dead end
+                self.undo_move(current_cell, next_cell)
 
         # we went the wrong way, let the previous cell know by returning False
         return False
