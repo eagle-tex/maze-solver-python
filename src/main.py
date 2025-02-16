@@ -2,11 +2,11 @@ import random
 from maze import Maze
 from window import Window
 
-NUM_ROWS = 12
-NUM_COLS = 16
+NUM_ROWS = 24  # 12
+NUM_COLS = 32  # 16
 MARGIN = 50
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200  # 800
+SCREEN_HEIGHT = 900  # 600
 
 
 def main():
