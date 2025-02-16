@@ -81,12 +81,12 @@ class Cell:
 
     def draw_move(self, to_cell: "Cell", undo: bool = False):
         if self._window:
-            from_cell_center: Point = Point(
+            src_cell_center: Point = Point(
                 (self._x1 + self._x2) / 2, (self._y1 + self._y2) / 2
             )
-            to_cell_center: Point = Point(
+            dest_cell_center: Point = Point(
                 (to_cell._x1 + to_cell._x2) / 2, (to_cell._y1 + to_cell._y2) / 2
             )
             line_color: str = "red" if not undo else "gray"
-            line: Line = Line(from_cell_center, to_cell_center)
+            line: Line = Line(src_cell_center, dest_cell_center)
             self._window.draw_line(line, line_color)
